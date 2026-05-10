@@ -12,7 +12,7 @@ body {
     padding-top: 40px;
 }
 
-/* ЯЗЫК */
+
 .lang {
     position: absolute;
     top: 10px;
@@ -26,7 +26,7 @@ body {
     cursor: pointer;
 }
 
-/* ФОРМА */
+
 input, select {
     padding: 12px;
     border-radius: 8px;
@@ -35,7 +35,7 @@ input, select {
     margin: 10px;
 }
 
-/* КНОПКА */
+
 button.main-btn {
     padding: 12px 25px;
     background: #1e3cff;
@@ -45,7 +45,7 @@ button.main-btn {
     cursor: pointer;
 }
 
-/* РЕЗУЛЬТАТ */
+
 #result {
     margin-top: 30px;
     font-size: 22px;
@@ -80,7 +80,7 @@ button.main-btn {
 
 <script>
 
-// 🌍 ПЕРЕВОДЫ
+
 const langData = {
     ru: {
         title: "Электронная очередь",
@@ -143,13 +143,13 @@ const langData = {
     }
 };
 
-// 🌍 СМЕНА ЯЗЫКА
+
 function setLang(lang){
     localStorage.setItem("lang",lang);
     applyLang();
 }
 
-// 🌍 ПРИМЕНЕНИЕ ЯЗЫКА
+
 function applyLang(){
     let lang = localStorage.getItem("lang") || "ru";
     let t = langData[lang];
@@ -163,15 +163,15 @@ function applyLang(){
 
     for(let key in t.services){
         let opt = document.createElement("option");
-        opt.value = key; // ВАЖНО (для сервера)
-        opt.textContent = t.services[key]; // язык
+        opt.value = key; 
+        opt.textContent = t.services[key]; 
         select.appendChild(opt);
     }
 }
 
 applyLang();
 
-// 🚀 ОТПРАВКА
+
 async function send(){
 
     let result = document.getElementById("result");
@@ -207,7 +207,7 @@ async function send(){
         data.desk
     );
 
-    // ✨ анимация
+
     setTimeout(()=>{
         result.classList.add("show");
     },100);
