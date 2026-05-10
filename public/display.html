@@ -12,7 +12,7 @@ body{
     overflow-x:hidden;
 }
 
-/* ===== АНИМАЦИИ ===== */
+
 
 @keyframes fadeIn{
     from{
@@ -31,7 +31,7 @@ body{
     100%{transform:scale(1);}
 }
 
-/* ===== ШАПКА ===== */
+
 
 .header{
 
@@ -66,7 +66,7 @@ body{
     width:70px;
 }
 
-/* ===== ТЕКУЩИЙ ===== */
+
 
 .current-box{
 
@@ -95,7 +95,7 @@ body{
     animation:pulse 2s infinite;
 }
 
-/* ===== ОСНОВНОЙ КОНТЕЙНЕР ===== */
+
 
 .main{
 
@@ -113,7 +113,7 @@ body{
     padding:20px;
 }
 
-/* ===== БОКОВЫЕ БЛОКИ ===== */
+
 
 .left-side,
 .right-side{
@@ -125,7 +125,7 @@ body{
     gap:20px;
 }
 
-/* ===== ФОТО ===== */
+
 
 .side-photo{
 
@@ -150,7 +150,7 @@ body{
     transform:scale(1.02);
 }
 
-/* ===== ТЕКСТ ПОД ФОТО ===== */
+
 
 .ad-text{
 
@@ -173,13 +173,13 @@ body{
     animation:fadeIn 0.5s ease;
 }
 
-/* ===== ЦЕНТР ===== */
+
 
 .queue-center{
     width:100%;
 }
 
-/* ===== ОЧЕРЕДЬ ===== */
+
 
 .queue{
 
@@ -192,7 +192,7 @@ body{
     min-height:600px;
 }
 
-/* ===== СТРОКА ===== */
+
 
 .queue-row{
 
@@ -237,7 +237,7 @@ body{
     transform:scale(1.03);
 }
 
-/* ===== АДАПТИВ ===== */
+
 
 @media(max-width:1200px){
 
@@ -264,7 +264,7 @@ body{
 
 <body>
 
-<!-- ===== ШАПКА ===== -->
+
 
 <div class="header">
 
@@ -276,7 +276,7 @@ body{
 
 </div>
 
-<!-- ===== ТЕКУЩИЙ НОМЕР ===== -->
+
 
 <div class="current-box">
 
@@ -290,17 +290,17 @@ body{
 
 </div>
 
-<!-- ===== ОСНОВНОЙ БЛОК ===== -->
+
 
 <div class="main">
 
-    <!-- ===== ЛЕВАЯ СТОРОНА ===== -->
+    
 
     <div class="left-side">
 
         <img
             id="leftSlide"
-            src="/left1.jpeg"
+            src="/left1.jpg"
             class="side-photo"
         >
 
@@ -313,7 +313,7 @@ body{
 
     </div>
 
-    <!-- ===== ЦЕНТР ===== -->
+    
 
     <div class="queue-center">
 
@@ -321,7 +321,7 @@ body{
 
     </div>
 
-    <!-- ===== ПРАВАЯ СТОРОНА ===== -->
+    
 
     <div class="right-side">
 
@@ -344,7 +344,7 @@ body{
 
 <script>
 
-/* ===== ОЧЕРЕДЬ ===== */
+
 
 let lastQueue = "";
 let lastNumber = null;
@@ -353,13 +353,13 @@ const audio = new Audio("sound.mp3");
 
 async function loadAll(){
 
-    // текущий номер
+    
 
     let current =
         await fetch("/current")
         .then(r => r.json());
 
-    // звук
+    
 
     if(current && current.number !== lastNumber){
 
@@ -371,7 +371,7 @@ async function loadAll(){
     document.getElementById("current").innerText =
         current ? current.number : "---";
 
-    // очередь
+    
 
     let data =
         await fetch("/queue")
@@ -380,7 +380,7 @@ async function loadAll(){
     let newData =
         JSON.stringify(data);
 
-    // если нет изменений
+    
 
     if(newData === lastQueue)
         return;
@@ -400,7 +400,7 @@ async function loadAll(){
         div.className =
             "queue-row";
 
-        // первый в очереди
+        
 
         if(index === 0){
 
@@ -427,13 +427,13 @@ async function loadAll(){
     });
 }
 
-/* обновление */
+
 
 setInterval(loadAll,2000);
 
 loadAll();
 
-/* ===== СЛАЙДЫ ===== */
+
 
 const slides = [
 
@@ -514,11 +514,11 @@ function rotateAds(){
     }
 }
 
-/* старт */
+
 
 rotateAds();
 
-/* каждые 30 секунд */
+
 
 setInterval(rotateAds,30000);
 
