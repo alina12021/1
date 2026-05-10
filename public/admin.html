@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Оператор</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #0b0b0b;
+    color: white;
+    text-align: center;
+}
+
+/* шапка */
+.header {
+    background: white;
+    color: black;
+    padding: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    border-bottom: 5px solid #1e3cff;
+}
+
+/* кнопки */
+.controls {
+    margin: 20px;
+}
+
+button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 8px;
+    background: #1e3cff;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* статистика */
+.stats {
+    margin: 10px;
+}
+
+/* текущий */
+.current {
+    margin: 20px;
+    font-size: 24px;
+    color: #1e3cff;
+}
+
+/* список */
+.list {
+    max-width: 900px;
+    margin: auto;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 2fr;
+    background: #1a1a1a;
+    margin: 8px;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.first {
+    border: 2px solid #1e3cff;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="header">ПАНЕЛЬ ОПЕРАТОРА</div>
+
+<div class="controls">
+    <button onclick="next()">▶ Следующий</button>
+    <button onclick="done()">✅ Завершить</button>
+    <button onclick="skip()">⏭ Пропустить</button>
+    <button onclick="reset()">🧹 Сброс</button>
+</div>
+
+<div class="stats" id="stats"></div>
+<div class="current" id="current">Текущий: ---</div>
+
+<div class="list" id="list"></div>
+
+<script>
+
+let lastQueue = "";
+
+async function load() {
+
+    let data = await fetch("/queue").then(r => r.json());
+    let newData = JSON.stringify(data);
+
+    if (newData === lastQueue) return;
+
+    lastQueue = newData;
+
+    let current = await fetch("/current").then(r => r.json());
+    let stats = await fetch("/stats").then(r => r.json());
+
+    document.getElementById("current").innerText =
+        current ? `Текущий: ${current.number} (${current.name})` : "Текущий: ---";
+
+    document.getElementById("stats").innerText =
+        `В очереди: ${stats.inQueue} | Обслужено: ${stats.served}`;
+
+    let list = document.getElementById("list");
+    list.innerHTML = "";
+
+    data.forEach((p, index) => {
+
+        let div = document.createElement("div");
+        div.className = "row";
+
+        if(index === 0){
+            div.classList.add("first");
+        }
+
+        div.innerHTML = `
+            <div><b>${p.number}</b></div>
+            <div>${p.name}</div>
+            <div>стол ${p.desk}</div>
+            <div>
+                <button onclick="edit('${p.id}')">✏️</button>
+                <button onclick="del('${p.id}')">❌</button>
+            </div>
+        `;
+
+        list.appendChild(div);
+    });
+}
+
+async function next(){ await fetch("/next",{method:"POST"}); load(); }
+async function done(){ await fetch("/done",{method:"POST"}); load(); }
+async function skip(){ await fetch("/skip",{method:"POST"}); load(); }
+async function reset(){
+    if(confirm("Очистить?")){
+        await fetch("/reset",{method:"POST"});
+        load();
+    }
+}
+
+async function del(id){
+    await fetch("/queue/"+id,{method:"DELETE"});
+    load();
+}
+
+async function edit(id){
+    let name = prompt("Имя:");
+    let request = prompt("Услуга:");
+
+    if(!name || !request) return;
+
+    await fetch("/queue/"+id,{
+        method:"PUT",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({name,request})
+    });
+
+    load();
+}
+
+setInterval(load,2000);
+load();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Очередь</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #0b0b0b;
+    color: white;
+    text-align: center;
+    padding-top: 40px;
+}
+
+/* ЯЗЫК */
+.lang {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.lang button {
+    margin: 5px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+/* ФОРМА */
+input, select {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    width: 250px;
+    margin: 10px;
+}
+
+/* КНОПКА */
+button.main-btn {
+    padding: 12px 25px;
+    background: #1e3cff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* РЕЗУЛЬТАТ */
+#result {
+    margin-top: 30px;
+    font-size: 22px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.4s;
+}
+#result.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<div class="lang">
+    <button onclick="setLang('ru')">RU</button>
+    <button onclick="setLang('kz')">KZ</button>
+    <button onclick="setLang('en')">EN</button>
+</div>
+
+<h1 id="title"></h1>
+
+<input id="name"><br>
+
+<select id="request"></select><br>
+
+<button class="main-btn" onclick="send()" id="btn"></button>
+
+<h2 id="result"></h2>
+
+<script>
+
+// 🌍 ПЕРЕВОДЫ
+const langData = {
+    ru: {
+        title: "Электронная очередь",
+        name: "ФИО",
+        btn: "Получить номер",
+        select: "Выберите услугу",
+        error: "Заполните все поля",
+        services: {
+            docs: "Подача документов",
+            consult: "Консультация",
+            check: "Проверка документов",
+            dorm: "Общежитие",
+            pay: "Оплата",
+            other: "Другое"
+        },
+        result: (n,a,d)=>
+        `Ваш номер: <b>${n}</b><br>
+         Перед вами: <b>${a}</b> человек<br>
+         Подойдите к столу: <b>${d}</b>`
+    },
+
+    kz: {
+        title: "Электронды кезек",
+        name: "Аты-жөні",
+        btn: "Нөмір алу",
+        select: "Қызметті таңдаңыз",
+        error: "Барлық өрістерді толтырыңыз",
+        services: {
+            docs: "Құжат тапсыру",
+            consult: "Кеңес",
+            check: "Құжат тексеру",
+            dorm: "Жатақхана",
+            pay: "Төлем",
+            other: "Басқа"
+        },
+        result: (n,a,d)=>
+        `Сіздің нөміріңіз: <b>${n}</b><br>
+         Алдыңызда: <b>${a}</b> адам<br>
+         Үстелге өтіңіз: <b>${d}</b>`
+    },
+
+    en: {
+        title: "Queue system",
+        name: "Full name",
+        btn: "Get number",
+        select: "Select service",
+        error: "Fill all fields",
+        services: {
+            docs: "Submit documents",
+            consult: "Consultation",
+            check: "Document check",
+            dorm: "Dormitory",
+            pay: "Payment",
+            other: "Other"
+        },
+        result: (n,a,d)=>
+        `Your number: <b>${n}</b><br>
+         People ahead: <b>${a}</b><br>
+         Go to desk: <b>${d}</b>`
+    }
+};
+
+// 🌍 СМЕНА ЯЗЫКА
+function setLang(lang){
+    localStorage.setItem("lang",lang);
+    applyLang();
+}
+
+// 🌍 ПРИМЕНЕНИЕ ЯЗЫКА
+function applyLang(){
+    let lang = localStorage.getItem("lang") || "ru";
+    let t = langData[lang];
+
+    document.getElementById("title").innerText = t.title;
+    document.getElementById("name").placeholder = t.name;
+    document.getElementById("btn").innerText = t.btn;
+
+    let select = document.getElementById("request");
+    select.innerHTML = `<option value="">${t.select}</option>`;
+
+    for(let key in t.services){
+        let opt = document.createElement("option");
+        opt.value = key; // ВАЖНО (для сервера)
+        opt.textContent = t.services[key]; // язык
+        select.appendChild(opt);
+    }
+}
+
+applyLang();
+
+// 🚀 ОТПРАВКА
+async function send(){
+
+    let result = document.getElementById("result");
+    result.classList.remove("show");
+
+    let lang = localStorage.getItem("lang") || "ru";
+    let t = langData[lang];
+
+    let nameV = document.getElementById("name").value.trim();
+    let req = document.getElementById("request").value;
+
+    if(!nameV || !req){
+        alert(t.error);
+        return;
+    }
+
+    let res = await fetch("/queue",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({name:nameV, request:req})
+    });
+
+    let data = await res.json();
+
+    if(data.error){
+        alert(data.error);
+        return;
+    }
+
+    result.innerHTML = t.result(
+        data.number,
+        data.peopleAhead,
+        data.desk
+    );
+
+    // ✨ анимация
+    setTimeout(()=>{
+        result.classList.add("show");
+    },100);
+}
+
+</script>
+
+</body>
+</html>
