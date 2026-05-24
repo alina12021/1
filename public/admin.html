@@ -95,6 +95,9 @@ button:hover {
 
 let lastQueue = "";
 
+let stats = await fetch("/stats")
+.then(r=>r.json());
+
 async function load() {
 
     let data = await fetch("/queue").then(r => r.json());
@@ -139,7 +142,21 @@ async function load() {
     });
 }
 
-async function next(){ await fetch("/next",{method:"POST"}); load(); }
+async function next(){
+
+    await fetch("/next",{
+        method:"POST"
+    });
+
+    loadAll();
+
+    // анимация
+    document.body.style.opacity = 0.7;
+
+    setTimeout(()=>{
+        document.body.style.opacity = 1;
+    },200);
+}
 async function done(){ await fetch("/done",{method:"POST"}); load(); }
 async function skip(){ await fetch("/skip",{method:"POST"}); load(); }
 async function reset(){

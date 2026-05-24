@@ -202,6 +202,7 @@ async function send(){
     }
 
     result.innerHTML = t.result(
+        localStorage.setItem("ticket", JSON.stringify(data)),
         data.number,
         data.peopleAhead,
         data.desk
@@ -212,6 +213,31 @@ async function send(){
         result.classList.add("show");
     },100);
 }
+
+window.onload = () => {
+
+    let saved =
+        localStorage.getItem("ticket");
+
+    if(saved){
+
+        let data =
+            JSON.parse(saved);
+
+        let lang =
+            localStorage.getItem("lang") || "ru";
+
+        let t =
+            langData[lang];
+
+        result.innerHTML =
+            t.result(
+                data.number,
+                data.peopleAhead,
+                data.desk
+            );
+    }
+};
 
 </script>
 
