@@ -1,148 +1,426 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Оператор</title>
+<title>Админ панель</title>
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial;
-    background: #0b0b0b;
-    color: white;
-    text-align: center;
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#0b0b0b;
+    color:white;
+    padding:30px;
 }
 
+/* ===== ЗАГОЛОВОК ===== */
 
-.header {
-    background: white;
-    color: black;
-    padding: 20px;
-    font-size: 28px;
-    font-weight: bold;
-    border-bottom: 5px solid #1e3cff;
+h1{
+    text-align:center;
+    color:#1e3cff;
+    margin-bottom:30px;
+    font-size:42px;
 }
 
+/* ===== КНОПКИ ===== */
 
-.controls {
-    margin: 20px;
+.controls{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:30px;
 }
 
-button {
-    padding: 10px 15px;
-    margin: 5px;
-    border: none;
-    border-radius: 8px;
-    background: #1e3cff;
-    color: white;
-    cursor: pointer;
+button{
+
+    padding:14px 22px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#1e3cff;
+
+    color:white;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+    transition:0.3s;
 }
 
-button:hover {
-    transform: scale(1.05);
+button:hover{
+    transform:scale(1.05);
+    background:#1630cc;
 }
 
+/* ===== ТЕКУЩИЙ ===== */
 
-.stats {
-    margin: 10px;
+.current-box{
+
+    background:#161616;
+
+    border:2px solid #1e3cff;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    margin-bottom:30px;
+
+    text-align:center;
 }
 
-
-.current {
-    margin: 20px;
-    font-size: 24px;
-    color: #1e3cff;
+.current-title{
+    font-size:22px;
+    opacity:0.8;
 }
 
+.current-number{
 
-.list {
-    max-width: 900px;
-    margin: auto;
+    font-size:70px;
+
+    font-weight:bold;
+
+    color:#1e3cff;
+
+    margin-top:10px;
 }
 
-.row {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr 2fr;
-    background: #1a1a1a;
-    margin: 8px;
-    padding: 12px;
-    border-radius: 10px;
+/* ===== СПИСОК ===== */
+
+.queue{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
 }
 
-.first {
-    border: 2px solid #1e3cff;
+/* ===== СТРОКА ===== */
+
+.person{
+
+    background:#151515;
+
+    border-left:6px solid #1e3cff;
+
+    border-radius:16px;
+
+    padding:18px;
+
+    display:grid;
+
+    grid-template-columns:
+        120px
+        1fr
+        180px
+        120px
+        250px;
+
+    align-items:center;
+
+    gap:10px;
+
+    animation:fadeIn 0.4s ease;
 }
+
+.person:hover{
+    transform:scale(1.01);
+}
+
+/* ===== ТЕКСТ ===== */
+
+.num{
+    font-size:28px;
+    font-weight:bold;
+    color:#1e3cff;
+}
+
+.name{
+    font-size:20px;
+}
+
+.service{
+    font-size:18px;
+    opacity:0.9;
+}
+
+.desk{
+    font-size:18px;
+}
+
+.time{
+    font-size:16px;
+    opacity:0.7;
+}
+
+/* ===== КНОПКИ ВНУТРИ ===== */
+
+.actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.delete-btn{
+    background:#ff2f2f;
+}
+
+.edit-btn{
+    background:#ffaa00;
+}
+
+/* ===== СТАТИСТИКА ===== */
+
+.stats{
+
+    margin-top:35px;
+
+    background:#151515;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    border:2px solid #1e3cff;
+}
+
+.stats h2{
+    margin-top:0;
+    color:#1e3cff;
+}
+
+.stat-row{
+    margin:10px 0;
+    font-size:18px;
+}
+
+/* ===== АНИМАЦИИ ===== */
+
+@keyframes fadeIn{
+
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* ===== АДАПТИВ ===== */
+
+@media(max-width:1200px){
+
+    .person{
+
+        grid-template-columns:1fr;
+
+        text-align:center;
+    }
+
+    .actions{
+        justify-content:center;
+    }
+}
+
 </style>
-
 </head>
 
 <body>
 
-<div class="header">ПАНЕЛЬ ОПЕРАТОРА</div>
+<h1>АДМИН ПАНЕЛЬ</h1>
+
+<!-- ===== КНОПКИ ===== -->
 
 <div class="controls">
-    <button onclick="next()">▶ Следующий</button>
-    <button onclick="done()">✅ Завершить</button>
-    <button onclick="skip()">⏭ Пропустить</button>
-    <button onclick="reset()">🧹 Сброс</button>
+
+    <button onclick="nextPerson()">
+        ▶ Следующий
+    </button>
+
+    <button onclick="skipPerson()">
+        ⏭ Пропустить
+    </button>
+
+    <button onclick="recallPerson()">
+        🔊 Повторить
+    </button>
+
+    <button onclick="resetQueue()">
+        🗑 Очистить
+    </button>
+
 </div>
 
-<div class="stats" id="stats"></div>
-<div class="current" id="current">Текущий: ---</div>
+<!-- ===== ТЕКУЩИЙ ===== -->
 
-<div class="list" id="list"></div>
+<div class="current-box">
+
+    <div class="current-title">
+        Сейчас обслуживается
+    </div>
+
+    <div class="current-number" id="current">
+        ---
+    </div>
+
+</div>
+
+<!-- ===== ОЧЕРЕДЬ ===== -->
+
+<div class="queue" id="queue"></div>
+
+<!-- ===== СТАТИСТИКА ===== -->
+
+<div class="stats">
+
+    <h2>Статистика</h2>
+
+    <div class="stat-row" id="total"></div>
+
+    <div class="stat-row" id="desk1"></div>
+
+    <div class="stat-row" id="desk2"></div>
+
+    <div class="stat-row" id="desk3"></div>
+
+    <div class="stat-row" id="desk4"></div>
+
+    <div class="stat-row" id="desk5"></div>
+
+</div>
 
 <script>
 
 let lastQueue = "";
 
-let stats = await fetch("/stats")
-.then(r=>r.json());
+// =========================
+// ЗАГРУЗКА
+// =========================
 
-async function load() {
+async function loadAll(){
 
-    let data = await fetch("/queue").then(r => r.json());
-    let newData = JSON.stringify(data);
-
-    if (newData === lastQueue) return;
-
-    lastQueue = newData;
-
-    let current = await fetch("/current").then(r => r.json());
-    let stats = await fetch("/stats").then(r => r.json());
+    // текущий
+    let current =
+        await fetch("/current")
+        .then(r=>r.json());
 
     document.getElementById("current").innerText =
-        current ? `Текущий: ${current.number} (${current.name})` : "Текущий: ---";
+        current ? current.number : "---";
 
-    document.getElementById("stats").innerText =
-        `В очереди: ${stats.inQueue} | Обслужено: ${stats.served}`;
+    // очередь
+    let data =
+        await fetch("/queue")
+        .then(r=>r.json());
 
-    let list = document.getElementById("list");
-    list.innerHTML = "";
+    let newData =
+        JSON.stringify(data);
 
-    data.forEach((p, index) => {
+    // без постоянного мигания
+    if(newData !== lastQueue){
 
-        let div = document.createElement("div");
-        div.className = "row";
+        lastQueue = newData;
 
-        if(index === 0){
-            div.classList.add("first");
-        }
+        let container =
+            document.getElementById("queue");
 
-        div.innerHTML = `
-            <div><b>${p.number}</b></div>
-            <div>${p.name}</div>
-            <div>стол ${p.desk}</div>
-            <div>
-                <button onclick="edit('${p.id}')">✏️</button>
-                <button onclick="del('${p.id}')">❌</button>
-            </div>
-        `;
+        container.innerHTML = "";
 
-        list.appendChild(div);
-    });
+        data.forEach(person=>{
+
+            let div =
+                document.createElement("div");
+
+            div.className = "person";
+
+            div.innerHTML = `
+
+                <div class="num">
+                    ${person.number}
+                </div>
+
+                <div class="name">
+                    ${person.name}
+                </div>
+
+                <div class="service">
+                    ${person.request}
+                </div>
+
+                <div class="desk">
+                    Стол ${person.desk}
+                </div>
+
+                <div>
+
+                    <div class="time">
+                        ${person.time}
+                    </div>
+
+                    <div class="actions">
+
+                        <button
+                        class="edit-btn"
+                        onclick="editPerson('${person.number}')">
+
+                            ✏ Ред.
+
+                        </button>
+
+                        <button
+                        class="delete-btn"
+                        onclick="deletePerson('${person.number}')">
+
+                            ✖ Удалить
+
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+
+            container.appendChild(div);
+        });
+    }
+
+    // статистика
+    let stats =
+        await fetch("/stats")
+        .then(r=>r.json());
+
+    total.innerText =
+        "Всего людей: " + stats.total;
+
+    desk1.innerText =
+        "Стол 1: " + stats.desks[1];
+
+    desk2.innerText =
+        "Стол 2: " + stats.desks[2];
+
+    desk3.innerText =
+        "Стол 3: " + stats.desks[3];
+
+    desk4.innerText =
+        "Стол 4: " + stats.desks[4];
+
+    desk5.innerText =
+        "Стол 5: " + (stats.desks[5] || 0);
 }
 
-async function next(){
+
+// =========================
+// СЛЕДУЮЩИЙ
+// =========================
+
+async function nextPerson(){
 
     await fetch("/next",{
         method:"POST"
@@ -150,44 +428,115 @@ async function next(){
 
     loadAll();
 
-    // анимация
     document.body.style.opacity = 0.7;
 
     setTimeout(()=>{
         document.body.style.opacity = 1;
     },200);
 }
-async function done(){ await fetch("/done",{method:"POST"}); load(); }
-async function skip(){ await fetch("/skip",{method:"POST"}); load(); }
-async function reset(){
-    if(confirm("Очистить?")){
-        await fetch("/reset",{method:"POST"});
-        load();
-    }
-}
 
-async function del(id){
-    await fetch("/queue/"+id,{method:"DELETE"});
-    load();
-}
 
-async function edit(id){
-    let name = prompt("Имя:");
-    let request = prompt("Услуга:");
+// =========================
+// ПРОПУСК
+// =========================
 
-    if(!name || !request) return;
+async function skipPerson(){
 
-    await fetch("/queue/"+id,{
-        method:"PUT",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({name,request})
+    await fetch("/skip",{
+        method:"POST"
     });
 
-    load();
+    loadAll();
 }
 
-setInterval(load,2000);
-load();
+
+// =========================
+// ПОВТОР
+// =========================
+
+async function recallPerson(){
+
+    await fetch("/recall",{
+        method:"POST"
+    });
+
+    loadAll();
+}
+
+
+// =========================
+// УДАЛЕНИЕ
+// =========================
+
+async function deletePerson(number){
+
+    await fetch("/queue/" + number,{
+        method:"DELETE"
+    });
+
+    loadAll();
+}
+
+
+// =========================
+// РЕДАКТИРОВАНИЕ
+// =========================
+
+async function editPerson(number){
+
+    let name =
+        prompt("Новое ФИО");
+
+    if(!name) return;
+
+    let request =
+        prompt("Новая услуга");
+
+    if(!request) return;
+
+    await fetch("/queue/" + number,{
+
+        method:"PUT",
+
+        headers:{
+            "Content-Type":
+            "application/json"
+        },
+
+        body:JSON.stringify({
+            name,
+            request
+        })
+    });
+
+    loadAll();
+}
+
+
+// =========================
+// ОЧИСТКА
+// =========================
+
+async function resetQueue(){
+
+    if(!confirm("Очистить очередь?"))
+        return;
+
+    await fetch("/reset",{
+        method:"POST"
+    });
+
+    loadAll();
+}
+
+
+// =========================
+// ОБНОВЛЕНИЕ
+// =========================
+
+setInterval(loadAll,2000);
+
+loadAll();
 
 </script>
 
