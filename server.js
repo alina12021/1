@@ -7,19 +7,33 @@ app.use(express.json());
 app.use(express.static("public"));
 
 
+// =====================================
+// ДАННЫЕ
+// =====================================
+
 let queue = [];
+
 let current = null;
 
 let stats = {
+
     total: 0,
+
+    served: 0,
+
     desks: {
         1: 0,
         2: 0,
         3: 0,
-        4: 0
+        4: 0,
+        5: 0
     }
 };
 
+
+// =====================================
+// ЗАГРУЗКА
+// =====================================
 
 function loadData() {
 
@@ -31,27 +45,42 @@ function loadData() {
             );
 
         queue = data.queue || [];
+
         current = data.current || null;
+
         stats = data.stats || stats;
     }
 }
 
 
+// =====================================
+// СОХРАНЕНИЕ
+// =====================================
+
 function saveData() {
 
     fs.writeFileSync(
+
         "queue.json",
 
         JSON.stringify({
+
             queue,
+
             current,
+
             stats
+
         })
     );
 }
 
 loadData();
 
+
+// =====================================
+// ГЕНЕРАЦИЯ НОМЕРА
+// =====================================
 
 function generateNumber(request) {
 
@@ -73,16 +102,24 @@ function generateNumber(request) {
         prefix = "H";
 
     let count =
+
         queue.filter(p =>
             p.number.startsWith(prefix)
         ).length + 1;
 
     return (
+
         prefix +
-        String(count).padStart(4, "0")
+
+        String(count)
+            .padStart(4, "0")
     );
 }
 
+
+// =====================================
+// СТОЛ
+// =====================================
 
 function getDesk(request) {
 
@@ -105,14 +142,25 @@ function getDesk(request) {
 }
 
 
+// =====================================
+// АНТИСПАМ
+// =====================================
+
 let lastRequestTime = 0;
 
 
+// =====================================
+// ДОБАВИТЬ В ОЧЕРЕДЬ
+// =====================================
+
 app.post("/queue", (req, res) => {
 
-    const { name, request } = req.body;
+    const {
+        name,
+        request
+    } = req.body;
 
-   
+    // проверка имени
     if (!name || name.trim().length < 3) {
 
         return res.json({
@@ -120,7 +168,7 @@ app.post("/queue", (req, res) => {
         });
     }
 
-   
+    // проверка услуги
     if (!request) {
 
         return res.json({
@@ -128,7 +176,7 @@ app.post("/queue", (req, res) => {
         });
     }
 
-  
+    // антиспам
     let now = Date.now();
 
     if (now - lastRequestTime < 3000) {
@@ -141,11 +189,14 @@ app.post("/queue", (req, res) => {
 
     lastRequestTime = now;
 
-   
+    // очередь
     const peopleAhead = queue.length;
-    const waitTime = peopleAhead * 5;
 
-  
+    // ожидание
+    const waitTime =
+        peopleAhead * 5;
+
+    // человек
     const person = {
 
         number:
@@ -165,30 +216,36 @@ app.post("/queue", (req, res) => {
                 .toLocaleTimeString()
     };
 
-  
+    // добавить
     queue.push(person);
 
- 
+    // статистика
     stats.total++;
 
     stats.desks[person.desk]++;
 
-
+    // сохранить
     saveData();
 
-  
+    // ответ
     res.json({
 
-        number: person.number,
+        number:
+            person.number,
 
         peopleAhead,
 
         waitTime,
 
-        desk: person.desk
+        desk:
+            person.desk
     });
 });
 
+
+// =====================================
+// ВСЯ ОЧЕРЕДЬ
+// =====================================
 
 app.get("/queue", (req, res) => {
 
@@ -196,11 +253,19 @@ app.get("/queue", (req, res) => {
 });
 
 
+// =====================================
+// ТЕКУЩИЙ
+// =====================================
+
 app.get("/current", (req, res) => {
 
     res.json(current);
 });
 
+
+// =====================================
+// СЛЕДУЮЩИЙ
+// =====================================
 
 app.post("/next", (req, res) => {
 
@@ -208,7 +273,11 @@ app.post("/next", (req, res) => {
 
         current = queue.shift();
 
-        current.status = "в процессе";
+        current.status =
+            "в процессе";
+
+        // статистика
+        stats.served++;
 
     } else {
 
@@ -221,17 +290,27 @@ app.post("/next", (req, res) => {
 });
 
 
+// =====================================
+// ПОВТОР
+// =====================================
+
 app.post("/recall", (req, res) => {
 
     res.json(current);
 });
 
 
+// =====================================
+// ПРОПУСК
+// =====================================
+
 app.post("/skip", (req, res) => {
 
     if (queue.length > 0) {
 
-        queue.push(queue.shift());
+        queue.push(
+            queue.shift()
+        );
     }
 
     saveData();
@@ -240,9 +319,16 @@ app.post("/skip", (req, res) => {
 });
 
 
-app.delete("/queue/:number", (req, res) => {
+// =====================================
+// УДАЛИТЬ
+// =====================================
 
-    const num = req.params.number;
+app.delete("/queue/:number",
+
+(req, res) => {
+
+    const num =
+        req.params.number;
 
     queue =
         queue.filter(
@@ -255,9 +341,16 @@ app.delete("/queue/:number", (req, res) => {
 });
 
 
-app.put("/queue/:number", (req, res) => {
+// =====================================
+// РЕДАКТИРОВАТЬ
+// =====================================
 
-    const num = req.params.number;
+app.put("/queue/:number",
+
+(req, res) => {
+
+    const num =
+        req.params.number;
 
     const {
         name,
@@ -285,6 +378,10 @@ app.put("/queue/:number", (req, res) => {
 });
 
 
+// =====================================
+// ОЧИСТКА
+// =====================================
+
 app.post("/reset", (req, res) => {
 
     queue = [];
@@ -295,11 +392,14 @@ app.post("/reset", (req, res) => {
 
         total: 0,
 
+        served: 0,
+
         desks: {
             1: 0,
             2: 0,
             3: 0,
-            4: 0
+            4: 0,
+            5: 0
         }
     };
 
@@ -311,16 +411,26 @@ app.post("/reset", (req, res) => {
 });
 
 
+// =====================================
+// СТАТИСТИКА
+// =====================================
+
 app.get("/stats", (req, res) => {
 
     res.json(stats);
 });
 
 
+// =====================================
+// ЗАПУСК
+// =====================================
+
 const PORT =
     process.env.PORT || 3000;
 
 app.listen(PORT, () => {
 
-    console.log("Сервер запущен");
+    console.log(
+        "Сервер запущен"
+    );
 });
