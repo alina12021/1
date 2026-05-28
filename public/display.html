@@ -268,7 +268,78 @@ body{
 
 <body>
 
+body{
 
+    margin:0;
+
+    background:#111;
+
+    font-family:Arial;
+
+    display:flex;
+
+    min-height:100vh;
+
+    overflow:hidden;
+}
+
+.side{
+
+    width:22%;
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:black;
+}
+
+.side img{
+
+    width:100%;
+
+    height:100vh;
+
+    object-fit:cover;
+
+    transition:1s;
+}
+
+.queue-wrapper{
+
+    width:56%;
+
+    background:#f2f2f2;
+
+    display:flex;
+
+    flex-direction:column;
+}
+
+.ad-text{
+
+    position:absolute;
+
+    bottom:40px;
+
+    left:20px;
+
+    right:20px;
+
+    background:rgba(0,0,0,0.55);
+
+    padding:18px;
+
+    border-radius:14px;
+
+    color:white;
+
+    font-size:19px;
+
+    line-height:1.6;
+
+    backdrop-filter:blur(4px);
+}
 
 <div class="header">
 
@@ -300,22 +371,45 @@ body{
 
     
 
-    <div class="left-side">
+    <div class="side left">
 
-        <img
-            id="leftSlide"
-            src="/left1.jpg"
-            class="side-photo"
-        >
+    <img id="leftImg" src="/left1.jpeg">
 
-        <div
-            class="ad-text"
-            id="leftText"
-        >
-            Добро пожаловать
+    <div class="ad-text" id="leftText"></div>
+
+</div>
+
+<div class="queue-wrapper">
+
+    <div class="header">
+        <div class="header-title">
+            ПРИЁМНАЯ КОМИССИЯ
+        </div>
+    </div>
+
+    <div class="current-box">
+
+        <div class="current-text">
+            СЕЙЧАС ОБСЛУЖИВАЕТСЯ
+        </div>
+
+        <div id="current" class="current-number">
+            ---
         </div>
 
     </div>
+
+    <div class="queue" id="queue"></div>
+
+</div>
+
+<div class="side right">
+
+    <img id="rightImg" src="/right1.jpeg">
+
+    <div class="ad-text" id="rightText"></div>
+
+</div>
 
     
 
@@ -525,6 +619,80 @@ rotateAds();
 
 
 setInterval(rotateAds,30000);
+
+
+
+const leftImages = [
+
+    "/left1.jpeg",
+    "/left2.jpeg",
+    "/left3.jpeg",
+    "/left4.jpeg"
+];
+
+const rightImages = [
+
+    "/right1.jpeg",
+    "/right2.jpeg",
+    "/right3.jpeg",
+    "/right4.jpeg"
+];
+
+
+
+
+const ads = [
+
+`🎓 15+ IT и технических специальностей<br>
+🎓 15+ IT және техникалық мамандықтар<br>
+🎓 15+ IT and technical specialties`,
+
+
+
+`🏆 Победители WorldSkills Kazakhstan<br>
+🏆 WorldSkills Kazakhstan жеңімпаздары<br>
+🏆 Winners of WorldSkills Kazakhstan`,
+
+
+
+`💻 Современные лаборатории и IT-классы<br>
+💻 Заманауи зертханалар мен IT сыныптары<br>
+💻 Modern laboratories and IT classrooms`,
+
+
+
+`🚀 Подготовка востребованных IT-специалистов<br>
+🚀 Сұранысқа ие IT мамандарын даярлау<br>
+🚀 Training highly demanded IT specialists`
+];
+
+let adIndex = 0;
+
+function rotateAds(){
+
+    document.getElementById("leftImg").src =
+        leftImages[adIndex];
+
+    document.getElementById("rightImg").src =
+        rightImages[adIndex];
+
+    document.getElementById("leftText").innerHTML =
+        ads[adIndex];
+
+    document.getElementById("rightText").innerHTML =
+        ads[adIndex];
+
+    adIndex++;
+
+    if(adIndex >= ads.length){
+
+        adIndex = 0;
+    }
+}
+
+rotateAds();
+
+setInterval(rotateAds, 30000);
 
 </script>
 
