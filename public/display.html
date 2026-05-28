@@ -6,43 +6,60 @@
 <style>
 
 body{
-
     margin:0;
-
     background:#111;
-
-    font-family:Arial;
-
+    font-family:Arial, sans-serif;
     display:flex;
-
-    min-height:100vh;
-
+    height:100vh;
     overflow:hidden;
 }
 
+/* ===== БОКОВЫЕ ФОТО ===== */
+
 .side{
-
     width:22%;
-
     position:relative;
-
     overflow:hidden;
-
     background:black;
 }
 
 .side img{
-
     width:100%;
-
-    height:100vh;
-
+    height:100%;
     object-fit:cover;
-
     transition:1s;
 }
 
-.queue-wrapper{
+/* ===== ТЕКСТ НА ФОТО ===== */
+
+.ad-text{
+
+    position:absolute;
+
+    bottom:25px;
+    left:20px;
+    right:20px;
+
+    background:rgba(0,0,0,0.6);
+
+    padding:18px;
+
+    border-radius:16px;
+
+    color:white;
+
+    font-size:18px;
+
+    line-height:1.6;
+
+    backdrop-filter:blur(4px);
+
+    animation:fadeIn 0.5s ease;
+}
+
+/* ===== ЦЕНТР ===== */
+
+.center{
 
     width:56%;
 
@@ -53,51 +70,7 @@ body{
     flex-direction:column;
 }
 
-.ad-text{
-
-    position:absolute;
-
-    bottom:40px;
-
-    left:20px;
-
-    right:20px;
-
-    background:rgba(0,0,0,0.55);
-
-    padding:18px;
-
-    border-radius:14px;
-
-    color:white;
-
-    font-size:19px;
-
-    line-height:1.6;
-
-    backdrop-filter:blur(4px);
-}
-
-
-
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(20px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-@keyframes pulse{
-    0%{transform:scale(1);}
-    50%{transform:scale(1.05);}
-    100%{transform:scale(1);}
-}
-
-
+/* ===== ШАПКА ===== */
 
 .header{
 
@@ -106,7 +79,9 @@ body{
     border-bottom:6px solid #1e3cff;
 
     display:flex;
+
     justify-content:center;
+
     align-items:center;
 
     padding:20px;
@@ -114,25 +89,25 @@ body{
     position:relative;
 }
 
-.header-title{
-
-    font-size:38px;
-    font-weight:bold;
-
-    color:black;
-}
-
 .logo{
 
     position:absolute;
 
     left:20px;
-    top:10px;
 
     width:70px;
 }
 
+.header-title{
 
+    font-size:38px;
+
+    font-weight:bold;
+
+    color:black;
+}
+
+/* ===== ТЕКУЩИЙ НОМЕР ===== */
 
 .current-box{
 
@@ -140,7 +115,7 @@ body{
 
     text-align:center;
 
-    padding:40px 20px;
+    padding:35px 20px;
 }
 
 .current-text{
@@ -161,108 +136,16 @@ body{
     animation:pulse 2s infinite;
 }
 
-
-
-.main{
-
-    display:grid;
-
-    grid-template-columns:
-        260px
-        1fr
-        260px;
-
-    gap:20px;
-
-    align-items:start;
-
-    padding:20px;
-}
-
-
-
-.left-side,
-.right-side{
-
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-
-    gap:20px;
-}
-
-
-
-.side-photo{
-
-    width:240px;
-
-    aspect-ratio:9 / 16;
-
-    object-fit:cover;
-
-    border-radius:20px;
-
-    border:3px solid #1e3cff;
-
-    box-shadow:0 0 25px rgba(30,60,255,0.5);
-
-    transition:0.5s;
-
-    animation:fadeIn 0.5s ease;
-}
-
-.side-photo:hover{
-    transform:scale(1.02);
-}
-
-
-
-.ad-text{
-
-    width:100%;
-
-    background:rgba(0,0,0,0.7);
-
-    color:white;
-
-    padding:15px;
-
-    border-radius:14px;
-
-    text-align:left;
-
-    font-size:16px;
-
-    line-height:1.6;
-
-    position:relative;
-
-    z-index:5;
-
-    animation:fadeIn 0.5s ease;
-}
-
-
-
-.queue-center{
-    width:100%;
-}
-
-
+/* ===== ОЧЕРЕДЬ ===== */
 
 .queue{
 
-    background:#f2f2f2;
+    flex:1;
 
-    border-radius:20px;
+    overflow:hidden;
 
-    padding:30px;
-
-    min-height:600px;
+    padding:25px;
 }
-
-
 
 .queue-row{
 
@@ -273,9 +156,9 @@ body{
         2fr
         1fr;
 
-    margin:15px 0;
+    align-items:center;
 
-    padding-bottom:14px;
+    padding:18px 10px;
 
     border-bottom:2px solid #d9d9d9;
 
@@ -304,24 +187,55 @@ body{
 
     font-weight:bold;
 
-    transform:scale(1.03);
+    background:#e9edff;
+
+    border-radius:12px;
 }
 
+/* ===== АНИМАЦИИ ===== */
 
+@keyframes fadeIn{
+
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@keyframes pulse{
+
+    0%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.05);
+    }
+
+    100%{
+        transform:scale(1);
+    }
+}
+
+/* ===== АДАПТИВ ===== */
 
 @media(max-width:1200px){
 
-    .main{
-        grid-template-columns:1fr;
-    }
-
-    .left-side,
-    .right-side{
+    .side{
         display:none;
     }
 
+    .center{
+        width:100%;
+    }
+
     .current-number{
-        font-size:60px;
+        font-size:70px;
     }
 
     .queue-row{
@@ -334,39 +248,9 @@ body{
 
 <body>
 
+<!-- ЛЕВАЯ СТОРОНА -->
 
-
-<div class="header">
-
-    <img src="/logo.png" class="logo">
-
-    <div class="header-title">
-        ЭЛЕКТРОННАЯ ОЧЕРЕДЬ
-    </div>
-
-</div>
-
-
-
-<div class="current-box">
-
-    <div class="current-text">
-        СЕЙЧАС ОБСЛУЖИВАЕТСЯ:
-    </div>
-
-    <div id="current" class="current-number">
-        ---
-    </div>
-
-</div>
-
-
-
-<div class="main">
-
-    
-
-    <div class="side left">
+<div class="side">
 
     <img id="leftImg" src="/left1.jpeg">
 
@@ -374,12 +258,18 @@ body{
 
 </div>
 
-<div class="queue-wrapper">
+<!-- ЦЕНТР -->
+
+<div class="center">
 
     <div class="header">
+
+        <img src="/logo.png" class="logo">
+
         <div class="header-title">
             ПРИЁМНАЯ КОМИССИЯ
         </div>
+
     </div>
 
     <div class="current-box">
@@ -398,7 +288,9 @@ body{
 
 </div>
 
-<div class="side right">
+<!-- ПРАВАЯ СТОРОНА -->
+
+<div class="side">
 
     <img id="rightImg" src="/right1.jpeg">
 
@@ -406,67 +298,42 @@ body{
 
 </div>
 
-    
-
-    <div class="queue-center">
-
-        <div class="queue" id="queue"></div>
-
-    </div>
-
-    
-
-    <div class="right-side">
-
-        <img
-            id="rightSlide"
-            src="/right1.jpeg"
-            class="side-photo"
-        >
-
-        <div
-            class="ad-text"
-            id="rightText"
-        >
-            Подготовьте документы
-        </div>
-
-    </div>
-
-</div>
-
-
-
 <script>
 
+// ===== ЗВУК =====
 
+const audio =
+    new Audio("sound.mp3");
 
-let lastQueue = "";
 let lastNumber = null;
+let lastQueue = "";
 
-const audio = new Audio("sound.mp3");
+// ===== ЗАГРУЗКА ОЧЕРЕДИ =====
 
 async function loadAll(){
 
-    
+    // текущий номер
 
     let current =
         await fetch("/current")
         .then(r => r.json());
 
-    
-
     if(current && current.number !== lastNumber){
 
         audio.play().catch(()=>{});
 
-        lastNumber = current.number;
+        lastNumber =
+            current.number;
     }
 
-    document.getElementById("current").innerHTML =
-        current ? current.number : "---";
+    document.getElementById("current")
+    .innerText =
 
-    
+        current
+            ? current.number
+            : "---";
+
+    // очередь
 
     let data =
         await fetch("/queue")
@@ -474,8 +341,6 @@ async function loadAll(){
 
     let newData =
         JSON.stringify(data);
-
-    
 
     if(newData === lastQueue)
         return;
@@ -495,8 +360,6 @@ async function loadAll(){
         div.className =
             "queue-row";
 
-        
-
         if(index === 0){
 
             div.classList.add("first");
@@ -515,20 +378,17 @@ async function loadAll(){
             <div class="desk">
                 стол ${p.desk}
             </div>
-
         `;
 
         container.appendChild(div);
     });
 }
 
-
-
 setInterval(loadAll,2000);
 
 loadAll();
 
-
+// ===== СЛАЙДЫ =====
 
 const slides = [
 
@@ -536,16 +396,10 @@ const slides = [
     left:"/left1.jpeg",
     right:"/right1.jpeg",
 
-    leftText:`
-    Добро пожаловать в приемную комиссию<br>
-    Қабылдау комиссиясына қош келдіңіз<br>
-    Welcome to the admissions office
-    `,
-
-    rightText:`
-    Подготовьте документы заранее<br>
-    Құжаттарды алдын ала дайындаңыз<br>
-    Prepare your documents in advance
+    text:`
+    🎓 15+ IT и технических специальностей<br>
+    🎓 15+ IT және техникалық мамандықтар<br>
+    🎓 15+ IT and technical specialties
     `
 },
 
@@ -553,16 +407,10 @@ const slides = [
     left:"/left2.jpeg",
     right:"/right2.jpeg",
 
-    leftText:`
-    Следите за номером очереди<br>
-    Кезек нөмірін бақылаңыз<br>
-    Watch your queue number
-    `,
-
-    rightText:`
-    Подойдите к указанному столу<br>
-    Көрсетілген үстелге өтіңіз<br>
-    Proceed to the assigned desk
+    text:`
+    🏆 Победители WorldSkills Kazakhstan<br>
+    🏆 WorldSkills Kazakhstan жеңімпаздары<br>
+    🏆 Winners of WorldSkills Kazakhstan
     `
 },
 
@@ -570,16 +418,21 @@ const slides = [
     left:"/left3.jpeg",
     right:"/right3.jpeg",
 
-    leftText:`
-    Спасибо за ожидание<br>
-    Күткеніңізге рақмет<br>
-    Thank you for waiting
-    `,
+    text:`
+    💻 Современные лаборатории и IT-классы<br>
+    💻 Заманауи зертханалар мен IT сыныптары<br>
+    💻 Modern laboratories and IT classrooms
+    `
+},
 
-    rightText:`
-    Желаем удачного поступления<br>
-    Сәтті оқуға түсуіңізге тілектеспіз<br>
-    We wish you successful admission
+{
+    left:"/left4.jpeg",
+    right:"/right4.jpeg",
+
+    text:`
+    🚀 Подготовка востребованных IT-специалистов<br>
+    🚀 Сұранысқа ие IT мамандарын даярлау<br>
+    🚀 Training highly demanded IT specialists
     `
 }
 
@@ -587,19 +440,21 @@ const slides = [
 
 let currentSlide = 0;
 
+// ===== СМЕНА ФОТО =====
+
 function rotateAds(){
 
-    document.getElementById("leftSlide").src =
+    document.getElementById("leftImg").src =
         slides[currentSlide].left;
 
-    document.getElementById("rightSlide").src =
+    document.getElementById("rightImg").src =
         slides[currentSlide].right;
 
     document.getElementById("leftText").innerHTML =
-        slides[currentSlide].leftText;
+        slides[currentSlide].text;
 
     document.getElementById("rightText").innerHTML =
-        slides[currentSlide].rightText;
+        slides[currentSlide].text;
 
     currentSlide++;
 
@@ -609,87 +464,9 @@ function rotateAds(){
     }
 }
 
-
-
 rotateAds();
-
-
 
 setInterval(rotateAds,30000);
-
-
-
-const leftImages = [
-
-    "/left1.jpeg",
-    "/left2.jpeg",
-    "/left3.jpeg",
-    "/left4.jpeg"
-];
-
-const rightImages = [
-
-    "/right1.jpeg",
-    "/right2.jpeg",
-    "/right3.jpeg",
-    "/right4.jpeg"
-];
-
-
-
-
-const ads = [
-
-`🎓 15+ IT и технических специальностей<br>
-🎓 15+ IT және техникалық мамандықтар<br>
-🎓 15+ IT and technical specialties`,
-
-
-
-`🏆 Победители WorldSkills Kazakhstan<br>
-🏆 WorldSkills Kazakhstan жеңімпаздары<br>
-🏆 Winners of WorldSkills Kazakhstan`,
-
-
-
-`💻 Современные лаборатории и IT-классы<br>
-💻 Заманауи зертханалар мен IT сыныптары<br>
-💻 Modern laboratories and IT classrooms`,
-
-
-
-`🚀 Подготовка востребованных IT-специалистов<br>
-🚀 Сұранысқа ие IT мамандарын даярлау<br>
-🚀 Training highly demanded IT specialists`
-];
-
-let adIndex = 0;
-
-function rotateAds(){
-
-    document.getElementById("leftImg").src =
-        leftImages[adIndex];
-
-    document.getElementById("rightImg").src =
-        rightImages[adIndex];
-
-    document.getElementById("leftText").innerHTML =
-        ads[adIndex];
-
-    document.getElementById("rightText").innerHTML =
-        ads[adIndex];
-
-    adIndex++;
-
-    if(adIndex >= ads.length){
-
-        adIndex = 0;
-    }
-}
-
-rotateAds();
-
-setInterval(rotateAds, 30000);
 
 </script>
 
