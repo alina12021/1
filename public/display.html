@@ -17,10 +17,20 @@ body{
 /* ===== БОКОВЫЕ ФОТО ===== */
 
 .side{
+
     width:22%;
+
     position:relative;
+
     overflow:hidden;
+
     background:black;
+
+    display:flex;
+
+    align-items:flex-end;
+
+    justify-content:center;
 }
 
 .side img{
@@ -475,9 +485,12 @@ function rotateAds(){
     }
 }
 
-rotateAds();
+window.onload = () => {
 
-setInterval(rotateAds,30000);
+    rotateAds();
+
+    setInterval(rotateAds,30000);
+};
 
 </script>
 
