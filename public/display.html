@@ -15,10 +15,9 @@ body{
     width:22%;
     display:flex;
     flex-direction:column;
-    background:#1a1a1a;
 }
 .side-photo{
-    height:65%;
+    height:60%;
     position:relative;
     overflow:hidden;
     background:black;
@@ -41,20 +40,47 @@ body{
 .side-text{
     flex:1;
     display:flex;
+    flex-direction:column;
     align-items:center;
     justify-content:center;
-    padding:16px;
-    background:#111;
-    border-top:3px solid #1e3cff;
+    padding:18px 16px;
     box-sizing:border-box;
+    background:linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 100%);
+    border-top:3px solid #1e3cff;
+    gap:10px;
 }
-.side-text p{
-    margin:0;
-    color:white;
-    font-size:16px;
-    line-height:1.9;
+.text-line{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    width:100%;
+}
+.text-line .emoji{
+    font-size:20px;
+    flex-shrink:0;
+    margin-top:1px;
+}
+.text-line .langs{
+    display:flex;
+    flex-direction:column;
+    gap:1px;
+}
+.text-line .ru{
+    color:#ffffff;
+    font-size:13px;
     font-weight:bold;
-    text-align:center;
+    line-height:1.4;
+}
+.text-line .kz{
+    color:#a0b4ff;
+    font-size:11px;
+    line-height:1.4;
+}
+.text-line .en{
+    color:#7090dd;
+    font-size:11px;
+    font-style:italic;
+    line-height:1.4;
 }
 .center{
     width:56%;
@@ -141,7 +167,7 @@ body{
 
 <div class="side">
     <div class="side-photo" id="leftPhoto"></div>
-    <div class="side-text"><p id="leftText">—</p></div>
+    <div class="side-text" id="leftText"></div>
 </div>
 
 <div class="center">
@@ -158,67 +184,115 @@ body{
 
 <div class="side">
     <div class="side-photo" id="rightPhoto"></div>
-    <div class="side-text"><p id="rightText">—</p></div>
+    <div class="side-text" id="rightText"></div>
 </div>
 
 <script>
-var slides = [
+var leftSlides = [
     {
-        left:"/left1.jpeg",
-        right:"/right1.jpeg",
-        text:"🎓 15+ IT и технических специальностей\n🎓 15+ IT және техникалық мамандықтар\n🎓 15+ IT and technical specialties"
+        img:"/left1.jpeg",
+        lines:[
+            { emoji:"🎓", ru:"15+ IT и технических специальностей", kz:"15+ IT және техникалық мамандықтар", en:"15+ IT & technical specialties" },
+            { emoji:"💡", ru:"Программирование, робототехника, кибербезопасность", kz:"Бағдарламалау, робототехника, киберқауіпсіздік", en:"Programming, robotics, cybersecurity" }
+        ]
     },
     {
-        left:"/left2.jpeg",
-        right:"/right2.jpeg",
-        text:"🏆 Победители WorldSkills Kazakhstan\n🏆 WorldSkills Kazakhstan жеңімпаздары\n🏆 Winners of WorldSkills Kazakhstan"
+        img:"/left2.jpeg",
+        lines:[
+            { emoji:"🏆", ru:"Победители WorldSkills Kazakhstan", kz:"WorldSkills Kazakhstan жеңімпаздары", en:"WorldSkills Kazakhstan winners" },
+            { emoji:"🥇", ru:"Лучшие результаты среди колледжей области Абай", kz:"Абай облысы колледждері арасындағы үздік нәтижелер", en:"Top results among Abai region colleges" }
+        ]
     },
     {
-        left:"/left3.jpeg",
-        right:"/right3.jpeg",
-        text:"💻 Современные лаборатории и IT-классы\n💻 Заманауи зертханалар мен IT сыныптары\n💻 Modern laboratories and IT classrooms"
+        img:"/left3.jpeg",
+        lines:[
+            { emoji:"💻", ru:"Современные IT-классы и лаборатории", kz:"Заманауи IT сыныптары мен зертханалар", en:"Modern IT labs & classrooms" },
+            { emoji:"🔬", ru:"Оборудование мирового уровня для практики", kz:"Тәжірибе үшін әлемдік деңгейдегі жабдық", en:"World-class equipment for hands-on training" }
+        ]
     },
     {
-        left:"/left4.jpeg",
-        right:"/right4.jpeg",
-        text:"🚀 Подготовка востребованных IT-специалистов\n🚀 Сұранысқа ие IT мамандарын даярлау\n🚀 Training highly demanded IT specialists"
+        img:"/left4.jpeg",
+        lines:[
+            { emoji:"🚀", ru:"Подготовка востребованных IT-специалистов", kz:"Сұранысқа ие IT мамандарын даярлау", en:"Training in-demand IT professionals" },
+            { emoji:"📈", ru:"98% выпускников трудоустраиваются по специальности", kz:"Түлектердің 98% мамандығы бойынша жұмысқа орналасады", en:"98% of graduates employed in their field" }
+        ]
     }
 ];
 
-var leftPhoto = document.getElementById("leftPhoto");
-var rightPhoto = document.getElementById("rightPhoto");
-var leftText = document.getElementById("leftText");
-var rightText = document.getElementById("rightText");
+var rightSlides = [
+    {
+        img:"/right1.jpeg",
+        lines:[
+            { emoji:"📋", ru:"Приём документов: 9 и 11 классы", kz:"Құжат қабылдау: 9 және 11 сыныптар", en:"Admission: grade 9 & 11 graduates" },
+            { emoji:"📝", ru:"Бюджетные и платные места", kz:"Бюджеттік және ақылы орындар", en:"State-funded & tuition-based places" }
+        ]
+    },
+    {
+        img:"/right2.jpeg",
+        lines:[
+            { emoji:"🌐", ru:"Телекоммуникации и инфобезопасность", kz:"Телекоммуникация және ақпараттық қауіпсіздік", en:"Telecommunications & information security" },
+            { emoji:"🔐", ru:"Направления, задающие тон целым отраслям", kz:"Салаларды дамытатын бағыттар", en:"Fields shaping entire industries" }
+        ]
+    },
+    {
+        img:"/right3.jpeg",
+        lines:[
+            { emoji:"🤝", ru:"Практика на реальных проектах с первого курса", kz:"Бірінші курстан бастап нақты жобаларда тәжірибе", en:"Real-project practice from year one" },
+            { emoji:"🏢", ru:"Партнёрство с ведущими IT-компаниями", kz:"Жетекші IT компаниялармен серіктестік", en:"Partnerships with leading IT companies" }
+        ]
+    },
+    {
+        img:"/right4.jpeg",
+        lines:[
+            { emoji:"🎓", ru:"Диплом государственного образца", kz:"Мемлекеттік үлгідегі диплом", en:"State-recognized diploma" },
+            { emoji:"🌟", ru:"Твоё будущее начинается здесь!", kz:"Сенің болашағың осы жерден басталады!", en:"Your future starts here!" }
+        ]
+    }
+];
 
-for(var i = 0; i < slides.length; i++){
-    var ld = document.createElement("div");
-    ld.className = i === 0 ? "slide active" : "slide";
-    ld.innerHTML = '<img src="' + slides[i].left + '">';
-    leftPhoto.appendChild(ld);
-
-    var rd = document.createElement("div");
-    rd.className = i === 0 ? "slide active" : "slide";
-    rd.innerHTML = '<img src="' + slides[i].right + '">';
-    rightPhoto.appendChild(rd);
+function renderLines(lines){
+    return lines.map(function(l){
+        return '<div class="text-line">' +
+            '<div class="emoji">' + l.emoji + '</div>' +
+            '<div class="langs">' +
+                '<div class="ru">' + l.ru + '</div>' +
+                '<div class="kz">' + l.kz + '</div>' +
+                '<div class="en">' + l.en + '</div>' +
+            '</div>' +
+        '</div>';
+    }).join('');
 }
 
-leftText.innerText = slides[0].text;
-rightText.innerText = slides[0].text;
+function buildPhoto(containerId, slidesData){
+    var container = document.getElementById(containerId);
+    for(var i = 0; i < slidesData.length; i++){
+        var div = document.createElement("div");
+        div.className = i === 0 ? "slide active" : "slide";
+        div.innerHTML = '<img src="' + slidesData[i].img + '">';
+        container.appendChild(div);
+    }
+}
+
+buildPhoto("leftPhoto", leftSlides);
+buildPhoto("rightPhoto", rightSlides);
+
+document.getElementById("leftText").innerHTML = renderLines(leftSlides[0].lines);
+document.getElementById("rightText").innerHTML = renderLines(rightSlides[0].lines);
 
 var currentSlide = 0;
 
 function rotateAds(){
-    var leftSlides = leftPhoto.querySelectorAll(".slide");
-    var rightSlides = rightPhoto.querySelectorAll(".slide");
-    var next = (currentSlide + 1) % slides.length;
+    var lPhotos = document.querySelectorAll("#leftPhoto .slide");
+    var rPhotos = document.querySelectorAll("#rightPhoto .slide");
+    var next = (currentSlide + 1) % leftSlides.length;
 
-    leftSlides[currentSlide].classList.remove("active");
-    rightSlides[currentSlide].classList.remove("active");
-    leftSlides[next].classList.add("active");
-    rightSlides[next].classList.add("active");
+    lPhotos[currentSlide].classList.remove("active");
+    rPhotos[currentSlide].classList.remove("active");
+    lPhotos[next].classList.add("active");
+    rPhotos[next].classList.add("active");
 
-    leftText.innerText = slides[next].text;
-    rightText.innerText = slides[next].text;
+    document.getElementById("leftText").innerHTML = renderLines(leftSlides[next].lines);
+    document.getElementById("rightText").innerHTML = renderLines(rightSlides[next].lines);
 
     currentSlide = next;
 }
@@ -232,9 +306,7 @@ function loadAll(){
     fetch("/current")
     .then(function(r){ return r.json(); })
     .then(function(current){
-        if(current && current.number !== lastNumber){
-            lastNumber = current.number;
-        }
+        if(current && current.number !== lastNumber) lastNumber = current.number;
         document.getElementById("current").innerText = current ? current.number : "---";
     })
     .catch(function(){});
@@ -245,10 +317,8 @@ function loadAll(){
         var newData = JSON.stringify(data);
         if(newData === lastQueue) return;
         lastQueue = newData;
-
         var container = document.getElementById("queue");
         container.innerHTML = "";
-
         data.forEach(function(p, index){
             var div = document.createElement("div");
             div.className = index === 0 ? "queue-row first" : "queue-row";
