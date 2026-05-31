@@ -39,26 +39,22 @@ body{
     display:block;
 }
 .side-text{
-    height:35%;
+    flex:1;
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:20px;
+    padding:16px;
     background:#111;
     border-top:3px solid #1e3cff;
+    box-sizing:border-box;
 }
-.ad-text{
+.side-text p{
+    margin:0;
     color:white;
-    font-size:17px;
-    line-height:1.8;
+    font-size:16px;
+    line-height:1.9;
     font-weight:bold;
     text-align:center;
-    text-shadow:0 1px 6px rgba(0,0,0,0.8);
-    opacity:0;
-    transition:opacity 0.5s ease;
-}
-.ad-text.visible{
-    opacity:1;
 }
 .center{
     width:56%;
@@ -115,15 +111,9 @@ body{
     color:black;
     animation:fadeIn 0.4s ease;
 }
-.num{
-    font-weight:bold;
-}
-.name{
-    text-align:center;
-}
-.desk{
-    text-align:right;
-}
+.num{ font-weight:bold; }
+.name{ text-align:center; }
+.desk{ text-align:right; }
 .first{
     color:#1e3cff;
     font-weight:bold;
@@ -151,9 +141,7 @@ body{
 
 <div class="side">
     <div class="side-photo" id="leftPhoto"></div>
-    <div class="side-text">
-        <div class="ad-text" id="leftText"></div>
-    </div>
+    <div class="side-text"><p id="leftText">—</p></div>
 </div>
 
 <div class="center">
@@ -170,116 +158,108 @@ body{
 
 <div class="side">
     <div class="side-photo" id="rightPhoto"></div>
-    <div class="side-text">
-        <div class="ad-text" id="rightText"></div>
-    </div>
+    <div class="side-text"><p id="rightText">—</p></div>
 </div>
 
 <script>
-const slides = [
+var slides = [
     {
         left:"/left1.jpeg",
         right:"/right1.jpeg",
-        text:`🎓 15+ IT и технических специальностей<br>🎓 15+ IT және техникалық мамандықтар<br>🎓 15+ IT and technical specialties`
+        text:"🎓 15+ IT и технических специальностей\n🎓 15+ IT және техникалық мамандықтар\n🎓 15+ IT and technical specialties"
     },
     {
         left:"/left2.jpeg",
         right:"/right2.jpeg",
-        text:`🏆 Победители WorldSkills Kazakhstan<br>🏆 WorldSkills Kazakhstan жеңімпаздары<br>🏆 Winners of WorldSkills Kazakhstan`
+        text:"🏆 Победители WorldSkills Kazakhstan\n🏆 WorldSkills Kazakhstan жеңімпаздары\n🏆 Winners of WorldSkills Kazakhstan"
     },
     {
         left:"/left3.jpeg",
         right:"/right3.jpeg",
-        text:`💻 Современные лаборатории и IT-классы<br>💻 Заманауи зертханалар мен IT сыныптары<br>💻 Modern laboratories and IT classrooms`
+        text:"💻 Современные лаборатории и IT-классы\n💻 Заманауи зертханалар мен IT сыныптары\n💻 Modern laboratories and IT classrooms"
     },
     {
         left:"/left4.jpeg",
         right:"/right4.jpeg",
-        text:`🚀 Подготовка востребованных IT-специалистов<br>🚀 Сұранысқа ие IT мамандарын даярлау<br>🚀 Training highly demanded IT specialists`
+        text:"🚀 Подготовка востребованных IT-специалистов\n🚀 Сұранысқа ие IT мамандарын даярлау\n🚀 Training highly demanded IT specialists"
     }
 ];
 
-function buildPhotoSlides(containerId, imgKey){
-    const container = document.getElementById(containerId);
-    slides.forEach((s, i) => {
-        const div = document.createElement("div");
-        div.className = "slide" + (i === 0 ? " active" : "");
-        div.innerHTML = `<img src="${s[imgKey]}">`;
-        container.appendChild(div);
-    });
+var leftPhoto = document.getElementById("leftPhoto");
+var rightPhoto = document.getElementById("rightPhoto");
+var leftText = document.getElementById("leftText");
+var rightText = document.getElementById("rightText");
+
+for(var i = 0; i < slides.length; i++){
+    var ld = document.createElement("div");
+    ld.className = i === 0 ? "slide active" : "slide";
+    ld.innerHTML = '<img src="' + slides[i].left + '">';
+    leftPhoto.appendChild(ld);
+
+    var rd = document.createElement("div");
+    rd.className = i === 0 ? "slide active" : "slide";
+    rd.innerHTML = '<img src="' + slides[i].right + '">';
+    rightPhoto.appendChild(rd);
 }
 
-buildPhotoSlides("leftPhoto", "left");
-buildPhotoSlides("rightPhoto", "right");
+leftText.innerText = slides[0].text;
+rightText.innerText = slides[0].text;
 
-const leftText = document.getElementById("leftText");
-const rightText = document.getElementById("rightText");
-
-function setTextBothSides(text){
-    leftText.classList.remove("visible");
-    rightText.classList.remove("visible");
-    setTimeout(() => {
-        leftText.innerHTML = text;
-        rightText.innerHTML = text;
-        leftText.classList.add("visible");
-        rightText.classList.add("visible");
-    }, 400);
-}
-
-setTextBothSides(slides[0].text);
-
-let currentSlide = 0;
+var currentSlide = 0;
 
 function rotateAds(){
-    const leftSlides = document.querySelectorAll("#leftPhoto .slide");
-    const rightSlides = document.querySelectorAll("#rightPhoto .slide");
-    const next = (currentSlide + 1) % slides.length;
+    var leftSlides = leftPhoto.querySelectorAll(".slide");
+    var rightSlides = rightPhoto.querySelectorAll(".slide");
+    var next = (currentSlide + 1) % slides.length;
 
     leftSlides[currentSlide].classList.remove("active");
     rightSlides[currentSlide].classList.remove("active");
     leftSlides[next].classList.add("active");
     rightSlides[next].classList.add("active");
 
-    setTextBothSides(slides[next].text);
+    leftText.innerText = slides[next].text;
+    rightText.innerText = slides[next].text;
 
     currentSlide = next;
 }
 
 setInterval(rotateAds, 30000);
 
-let lastNumber = null;
-let lastQueue = "";
+var lastNumber = null;
+var lastQueue = "";
 
-async function loadAll(){
-    try {
-        let current = await fetch("/current").then(r => r.json());
+function loadAll(){
+    fetch("/current")
+    .then(function(r){ return r.json(); })
+    .then(function(current){
         if(current && current.number !== lastNumber){
             lastNumber = current.number;
         }
         document.getElementById("current").innerText = current ? current.number : "---";
-    } catch(e){}
+    })
+    .catch(function(){});
 
-    try {
-        let data = await fetch("/queue").then(r => r.json());
-        let newData = JSON.stringify(data);
+    fetch("/queue")
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+        var newData = JSON.stringify(data);
         if(newData === lastQueue) return;
         lastQueue = newData;
 
-        let container = document.getElementById("queue");
+        var container = document.getElementById("queue");
         container.innerHTML = "";
 
-        data.forEach((p, index) => {
-            let div = document.createElement("div");
-            div.className = "queue-row";
-            if(index === 0) div.classList.add("first");
-            div.innerHTML = `
-                <div class="num">${p.number}</div>
-                <div class="name">${p.name}</div>
-                <div class="desk">стол ${p.desk}</div>
-            `;
+        data.forEach(function(p, index){
+            var div = document.createElement("div");
+            div.className = index === 0 ? "queue-row first" : "queue-row";
+            div.innerHTML =
+                '<div class="num">' + p.number + '</div>' +
+                '<div class="name">' + p.name + '</div>' +
+                '<div class="desk">стол ' + p.desk + '</div>';
             container.appendChild(div);
         });
-    } catch(e){}
+    })
+    .catch(function(){});
 }
 
 setInterval(loadAll, 2000);
