@@ -79,31 +79,13 @@ button:hover{
     font-weight:bold;
     color:#1e3cff;
 }
-.name{
-    font-size:20px;
-}
-.service{
-    font-size:18px;
-    opacity:0.9;
-}
-.desk{
-    font-size:18px;
-}
-.time{
-    font-size:16px;
-    opacity:0.7;
-}
-.actions{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-}
-.delete-btn{
-    background:#ff2f2f;
-}
-.edit-btn{
-    background:#ffaa00;
-}
+.name{ font-size:20px; }
+.service{ font-size:18px; opacity:0.9; }
+.desk{ font-size:18px; }
+.time{ font-size:16px; opacity:0.7; }
+.actions{ display:flex; gap:8px; flex-wrap:wrap; }
+.delete-btn{ background:#ff2f2f; }
+.edit-btn{ background:#ffaa00; }
 .stats{
     margin-top:35px;
     background:#151515;
@@ -111,60 +93,151 @@ button:hover{
     padding:25px;
     border:2px solid #1e3cff;
 }
-.stats h2{
+.stats h2{ margin-top:0; color:#1e3cff; }
+.stat-row{ margin:10px 0; font-size:18px; }
+
+.login-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.92);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+}
+.login-box{
+    background:#151515;
+    border:2px solid #1e3cff;
+    border-radius:20px;
+    padding:40px;
+    text-align:center;
+    width:320px;
+}
+.login-box h2{
     margin-top:0;
     color:#1e3cff;
+    font-size:26px;
 }
-.stat-row{
-    margin:10px 0;
+.login-box input{
+    width:100%;
+    padding:14px;
+    border-radius:10px;
+    border:2px solid #333;
+    background:#0b0b0b;
+    color:white;
     font-size:18px;
+    text-align:center;
+    box-sizing:border-box;
+    margin:16px 0;
+    letter-spacing:4px;
 }
+.login-box input:focus{
+    outline:none;
+    border-color:#1e3cff;
+}
+.login-box .error{
+    color:#ff4444;
+    font-size:15px;
+    margin-top:8px;
+    min-height:20px;
+}
+.content{ display:none; }
+
 @keyframes fadeIn{
     from{opacity:0;transform:translateY(15px);}
     to{opacity:1;transform:translateY(0);}
 }
+@keyframes shake{
+    0%,100%{transform:translateX(0);}
+    20%,60%{transform:translateX(-8px);}
+    40%,80%{transform:translateX(8px);}
+}
 @media(max-width:1200px){
-    .person{
-        grid-template-columns:1fr;
-        text-align:center;
-    }
-    .actions{
-        justify-content:center;
-    }
+    .person{ grid-template-columns:1fr; text-align:center; }
+    .actions{ justify-content:center; }
 }
 </style>
 </head>
 <body>
 
-<h1>АДМИН ПАНЕЛЬ</h1>
-
-<div class="controls">
-    <button onclick="nextPerson()">▶ Следующий</button>
-    <button onclick="skipPerson()">⏭ Пропустить</button>
-    <button onclick="recallPerson()">🔊 Повторить</button>
-    <button onclick="resetQueue()">🗑 Очистить</button>
+<div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+        <h2>🔐 Вход в панель</h2>
+        <p style="opacity:0.6;margin:0;">Введите пароль администратора</p>
+        <input type="password" id="passwordInput" placeholder="••••••••" onkeydown="if(event.key==='Enter') checkPassword()">
+        <button onclick="checkPassword()" style="width:100%;font-size:18px;padding:14px;">Войти</button>
+        <div class="error" id="loginError"></div>
+    </div>
 </div>
 
-<div class="current-box">
-    <div class="current-title">Сейчас обслуживается</div>
-    <div class="current-number" id="current">---</div>
-</div>
+<div class="content" id="content">
+    <h1>АДМИН ПАНЕЛЬ</h1>
 
-<div class="queue" id="queue"></div>
+    <div class="controls">
+        <button onclick="nextPerson()">▶ Следующий</button>
+        <button onclick="skipPerson()">⏭ Пропустить</button>
+        <button onclick="recallPerson()">🔊 Повторить</button>
+        <button onclick="resetQueue()">🗑 Очистить</button>
+        <button onclick="logout()" style="background:#444;">🚪 Выйти</button>
+    </div>
 
-<div class="stats">
-    <h2>Статистика</h2>
-    <div class="stat-row" id="total"></div>
-    <div class="stat-row" id="served"></div>
-    <div class="stat-row" id="desk1"></div>
-    <div class="stat-row" id="desk2"></div>
-    <div class="stat-row" id="desk3"></div>
-    <div class="stat-row" id="desk4"></div>
-    <div class="stat-row" id="desk5"></div>
+    <div class="current-box">
+        <div class="current-title">Сейчас обслуживается</div>
+        <div class="current-number" id="current">---</div>
+    </div>
+
+    <div class="queue" id="queue"></div>
+
+    <div class="stats">
+        <h2>Статистика</h2>
+        <div class="stat-row" id="total"></div>
+        <div class="stat-row" id="served"></div>
+        <div class="stat-row" id="desk1"></div>
+        <div class="stat-row" id="desk2"></div>
+        <div class="stat-row" id="desk3"></div>
+        <div class="stat-row" id="desk4"></div>
+        <div class="stat-row" id="desk5"></div>
+    </div>
 </div>
 
 <script>
+var ADMIN_PASSWORD = "102030";
 var lastQueue = "";
+var interval = null;
+
+function checkPassword(){
+    var input = document.getElementById("passwordInput").value;
+    if(input === ADMIN_PASSWORD){
+        sessionStorage.setItem("adminAuth", "true");
+        showPanel();
+    } else {
+        var box = document.getElementById("passwordInput");
+        box.style.animation = "shake 0.4s ease";
+        setTimeout(function(){ box.style.animation = ""; }, 400);
+        document.getElementById("loginError").innerText = "Неверный пароль. Попробуйте снова.";
+        document.getElementById("passwordInput").value = "";
+    }
+}
+
+function showPanel(){
+    document.getElementById("loginOverlay").style.display = "none";
+    document.getElementById("content").style.display = "block";
+    loadAll();
+    interval = setInterval(loadAll, 2000);
+}
+
+function logout(){
+    sessionStorage.removeItem("adminAuth");
+    clearInterval(interval);
+    document.getElementById("content").style.display = "none";
+    document.getElementById("loginOverlay").style.display = "flex";
+    document.getElementById("passwordInput").value = "";
+    document.getElementById("loginError").innerText = "";
+}
+
+if(sessionStorage.getItem("adminAuth") === "true"){
+    showPanel();
+}
 
 function loadAll(){
     fetch("/current")
@@ -180,10 +253,8 @@ function loadAll(){
         var newData = JSON.stringify(data);
         if(newData === lastQueue) return;
         lastQueue = newData;
-
         var container = document.getElementById("queue");
         container.innerHTML = "";
-
         data.forEach(function(person){
             var div = document.createElement("div");
             div.className = "person";
@@ -219,27 +290,19 @@ function loadAll(){
 }
 
 function nextPerson(){
-    fetch("/next", { method:"POST" })
-    .then(function(){ loadAll(); });
+    fetch("/next", { method:"POST" }).then(function(){ loadAll(); });
     document.body.style.opacity = 0.7;
     setTimeout(function(){ document.body.style.opacity = 1; }, 200);
 }
-
 function skipPerson(){
-    fetch("/skip", { method:"POST" })
-    .then(function(){ loadAll(); });
+    fetch("/skip", { method:"POST" }).then(function(){ loadAll(); });
 }
-
 function recallPerson(){
-    fetch("/recall", { method:"POST" })
-    .then(function(){ loadAll(); });
+    fetch("/recall", { method:"POST" }).then(function(){ loadAll(); });
 }
-
 function deletePerson(number){
-    fetch("/queue/" + number, { method:"DELETE" })
-    .then(function(){ loadAll(); });
+    fetch("/queue/" + number, { method:"DELETE" }).then(function(){ loadAll(); });
 }
-
 function editPerson(number){
     var name = prompt("Новое ФИО");
     if(!name) return;
@@ -249,18 +312,12 @@ function editPerson(number){
         method:"PUT",
         headers:{ "Content-Type":"application/json" },
         body:JSON.stringify({ name:name, request:request })
-    })
-    .then(function(){ loadAll(); });
+    }).then(function(){ loadAll(); });
 }
-
 function resetQueue(){
     if(!confirm("Очистить очередь?")) return;
-    fetch("/reset", { method:"POST" })
-    .then(function(){ loadAll(); });
+    fetch("/reset", { method:"POST" }).then(function(){ loadAll(); });
 }
-
-setInterval(loadAll, 2000);
-loadAll();
 </script>
 
 </body>
