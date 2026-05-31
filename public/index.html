@@ -2,64 +2,66 @@
 <html>
 <head>
 <title>Очередь</title>
-
 <style>
-body {
-    font-family: Arial;
-    background: #0b0b0b;
-    color: white;
-    text-align: center;
-    padding-top: 40px;
+body{
+    font-family:Arial;
+    background:#0b0b0b;
+    color:white;
+    text-align:center;
+    padding-top:40px;
 }
-
-
-.lang {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+.lang{
+    position:absolute;
+    top:10px;
+    right:10px;
 }
-.lang button {
-    margin: 5px;
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
+.lang button{
+    margin:5px;
+    background:none;
+    border:none;
+    color:white;
+    cursor:pointer;
+    font-size:15px;
 }
-
-
-input, select {
-    padding: 12px;
-    border-radius: 8px;
-    border: none;
-    width: 250px;
-    margin: 10px;
+.lang button:hover{
+    color:#1e3cff;
 }
-
-
-button.main-btn {
-    padding: 12px 25px;
-    background: #1e3cff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+input, select{
+    padding:12px;
+    border-radius:8px;
+    border:none;
+    width:250px;
+    margin:10px;
 }
-
-
-#result {
-    margin-top: 30px;
-    font-size: 22px;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: 0.4s;
+button.main-btn{
+    padding:12px 25px;
+    background:#1e3cff;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
 }
-#result.show {
-    opacity: 1;
-    transform: translateY(0);
+button.main-btn:hover{
+    background:#1630cc;
+}
+#result{
+    margin-top:30px;
+    font-size:22px;
+    opacity:0;
+    transform:translateY(20px);
+    transition:0.4s;
+}
+#result.show{
+    opacity:1;
+    transform:translateY(0);
+}
+#newBtn{
+    display:none;
+    margin-top:20px;
 }
 </style>
 </head>
-
 <body>
 
 <div class="lang">
@@ -71,255 +73,156 @@ button.main-btn {
 <h1 id="title"></h1>
 
 <input id="name"><br>
-
 <select id="request"></select><br>
-
 <button class="main-btn" onclick="send()" id="btn"></button>
 
 <h2 id="result"></h2>
+<button class="main-btn" id="newBtn" onclick="newTicket()"></button>
 
 <script>
-
-const langData = {
-
-    ru: {
-        title: "Электронная очередь",
-        name: "ФИО",
-        btn: "Получить номер",
-        select: "Выберите услугу",
-        error: "Заполните все поля",
-
-        services: {
-            docs: "Подача документов",
-            consult: "Консультация",
-            check: "Проверка документов",
-            dorm: "Общежитие",
-            pay: "Оплата",
-            other: "Другое"
+var langData = {
+    ru:{
+        title:"Электронная очередь",
+        name:"ФИО",
+        btn:"Получить номер",
+        newBtn:"Новый номер",
+        select:"Выберите услугу",
+        error:"Заполните все поля",
+        services:{
+            docs:"Подача документов",
+            consult:"Консультация",
+            check:"Проверка документов",
+            dorm:"Общежитие",
+            pay:"Оплата",
+            other:"Другое"
         },
-
-        result: (n,a,d)=>
-
-`Ваш номер: <b>${n}</b><br>
-Перед вами: <b>${a}</b><br>
-Подойдите к столу: <b>${d}</b>`
+        result:function(n,a,d){
+            return "Ваш номер: <b>"+n+"</b><br>Перед вами: <b>"+a+"</b><br>Подойдите к столу: <b>"+d+"</b>";
+        }
     },
-
-
-
-    kz: {
-        title: "Электронды кезек",
-        name: "Аты-жөні",
-        btn: "Нөмір алу",
-        select: "Қызметті таңдаңыз",
-        error: "Барлық өрістерді толтырыңыз",
-
-        services: {
-            docs: "Құжат тапсыру",
-            consult: "Кеңес",
-            check: "Құжат тексеру",
-            dorm: "Жатақхана",
-            pay: "Төлем",
-            other: "Басқа"
+    kz:{
+        title:"Электронды кезек",
+        name:"Аты-жөні",
+        btn:"Нөмір алу",
+        newBtn:"Жаңа нөмір",
+        select:"Қызметті таңдаңыз",
+        error:"Барлық өрістерді толтырыңыз",
+        services:{
+            docs:"Құжат тапсыру",
+            consult:"Кеңес",
+            check:"Құжат тексеру",
+            dorm:"Жатақхана",
+            pay:"Төлем",
+            other:"Басқа"
         },
-
-        result: (n,a,d)=>
-
-`Сіздің нөміріңіз: <b>${n}</b><br>
-Алдыңызда: <b>${a}</b> адам<br>
-Үстелге өтіңіз: <b>${d}</b>`
+        result:function(n,a,d){
+            return "Сіздің нөміріңіз: <b>"+n+"</b><br>Алдыңызда: <b>"+a+"</b> адам<br>Үстелге өтіңіз: <b>"+d+"</b>";
+        }
     },
-
-
-
-    en: {
-        title: "Queue system",
-        name: "Full name",
-        btn: "Get number",
-        select: "Select service",
-        error: "Fill all fields",
-
-        services: {
-            docs: "Submit documents",
-            consult: "Consultation",
-            check: "Document check",
-            dorm: "Dormitory",
-            pay: "Payment",
-            other: "Other"
+    en:{
+        title:"Queue system",
+        name:"Full name",
+        btn:"Get number",
+        newBtn:"New number",
+        select:"Select service",
+        error:"Fill all fields",
+        services:{
+            docs:"Submit documents",
+            consult:"Consultation",
+            check:"Document check",
+            dorm:"Dormitory",
+            pay:"Payment",
+            other:"Other"
         },
-
-        result: (n,a,d)=>
-
-`Your number: <b>${n}</b><br>
-People ahead: <b>${a}</b><br>
-Go to desk: <b>${d}</b>`
+        result:function(n,a,d){
+            return "Your number: <b>"+n+"</b><br>People ahead: <b>"+a+"</b><br>Go to desk: <b>"+d+"</b>";
+        }
     }
 };
 
+function getLang(){
+    return localStorage.getItem("lang") || "ru";
+}
 
 function setLang(lang){
-
     localStorage.setItem("lang", lang);
-
     applyLang();
 }
 
-
 function applyLang(){
+    var lang = getLang();
+    var t = langData[lang];
 
-    let lang =
-        localStorage.getItem("lang") || "ru";
+    document.getElementById("title").innerText = t.title;
+    document.getElementById("name").placeholder = t.name;
+    document.getElementById("btn").innerText = t.btn;
+    document.getElementById("newBtn").innerText = t.newBtn;
 
-    let t =
-        langData[lang];
-
-    document.getElementById("title").innerText =
-        t.title;
-
-    document.getElementById("name").placeholder =
-        t.name;
-
-    document.getElementById("btn").innerText =
-        t.btn;
-
-    let select =
-        document.getElementById("request");
-
-    select.innerHTML =
-        `<option value="">${t.select}</option>`;
-
-    for(let key in t.services){
-
-        let opt =
-            document.createElement("option");
-
+    var select = document.getElementById("request");
+    select.innerHTML = '<option value="">' + t.select + '</option>';
+    for(var key in t.services){
+        var opt = document.createElement("option");
         opt.value = key;
-
-        opt.textContent =
-            t.services[key];
-
+        opt.textContent = t.services[key];
         select.appendChild(opt);
     }
 }
 
-applyLang();
-
-
-async function send(){
-
-    let result =
-        document.getElementById("result");
-
+function showResult(data){
+    var lang = getLang();
+    var t = langData[lang];
+    var result = document.getElementById("result");
     result.classList.remove("show");
-
-    let lang =
-        localStorage.getItem("lang") || "ru";
-
-    let t =
-        langData[lang];
-
-    let nameV =
-        document.getElementById("name")
-        .value
-        .trim();
-
-    let req =
-        document.getElementById("request")
-        .value;
-
-    if(!nameV || !req){
-
-        alert(t.error);
-
-        return;
-    }
-
-    let res =
-        await fetch("/queue",{
-
-            method:"POST",
-
-            headers:{
-                "Content-Type":
-                "application/json"
-            },
-
-            body:JSON.stringify({
-
-                name:nameV,
-
-                request:req
-            })
-        });
-
-    let data =
-        await res.json();
-
-    if(data.error){
-
-        alert(data.error);
-
-        return;
-    }
-
-
-    localStorage.setItem(
-        "ticket",
-        JSON.stringify(data)
-    );
-
-
-    result.innerHTML =
-        t.result(
-
-            data.number,
-
-            data.peopleAhead,
-
-            data.desk
-        );
-
-    setTimeout(()=>{
-
-        result.classList.add("show");
-
-    },100);
+    result.innerHTML = t.result(data.number, data.peopleAhead, data.desk);
+    document.getElementById("newBtn").style.display = "inline-block";
+    document.getElementById("btn").style.display = "none";
+    setTimeout(function(){ result.classList.add("show"); }, 100);
 }
 
+function newTicket(){
+    localStorage.removeItem("ticket");
+    document.getElementById("result").classList.remove("show");
+    document.getElementById("result").innerHTML = "";
+    document.getElementById("name").value = "";
+    document.getElementById("request").value = "";
+    document.getElementById("newBtn").style.display = "none";
+    document.getElementById("btn").style.display = "inline-block";
+}
 
-window.onload = () => {
+function send(){
+    var lang = getLang();
+    var t = langData[lang];
+    var nameV = document.getElementById("name").value.trim();
+    var req = document.getElementById("request").value;
 
-    let saved =
-        localStorage.getItem("ticket");
-
-    if(saved){
-
-        let data =
-            JSON.parse(saved);
-
-        let lang =
-            localStorage.getItem("lang") || "ru";
-
-        let t =
-            langData[lang];
-
-        document.getElementById("result")
-        .innerHTML =
-
-            t.result(
-
-                data.number,
-
-                data.peopleAhead,
-
-                data.desk
-            );
-
-        document.getElementById("result")
-        .classList.add("show");
+    if(!nameV || !req){
+        alert(t.error);
+        return;
     }
-};
 
+    fetch("/queue", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({ name:nameV, request:req })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+        if(data.error){
+            alert(data.error);
+            return;
+        }
+        localStorage.setItem("ticket", JSON.stringify(data));
+        showResult(data);
+    })
+    .catch(function(){});
+}
+
+applyLang();
+
+var saved = localStorage.getItem("ticket");
+if(saved){
+    showResult(JSON.parse(saved));
+}
 </script>
 
 </body>
