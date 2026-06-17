@@ -88,17 +88,38 @@ function generateNumber(request) {
     if (request.includes("dorm"))
         prefix = "H";
 
-    let count =
+    let maxNumber = 0;
 
-        queue.filter(p =>
-            p.number.startsWith(prefix)
-        ).length + 1;
+    queue.forEach(person => {
+
+        if (person.number.startsWith(prefix)) {
+
+            let num = parseInt(
+                person.number.substring(1)
+            );
+
+            if (num > maxNumber)
+                maxNumber = num;
+        }
+    });
+
+    if (
+        current &&
+        current.number &&
+        current.number.startsWith(prefix)
+    ) {
+
+        let num = parseInt(
+            current.number.substring(1)
+        );
+
+        if (num > maxNumber)
+            maxNumber = num;
+    }
 
     return (
-
         prefix +
-
-        String(count)
+        String(maxNumber + 1)
             .padStart(4, "0")
     );
 }
@@ -189,9 +210,11 @@ app.post("/queue", (req, res) => {
 
         status: "ожидает",
 
-        time:
-            new Date()
-                .toLocaleTimeString()
+        time: new Date().toLocaleTimeString("ru-RU", {
+    timeZone: "Asia/Almaty",
+    hour: "2-digit",
+    minute: "2-digit"
+})
     };
 
     
